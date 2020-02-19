@@ -13,7 +13,7 @@ Installs in /usr/bin
 Or install without cloning this repo using curl one liner
 
 ```
-curl https://raw.githubusercontent.com/krezreb/singleton/master/singleton.sh > /dev/null | sudo tee /usr/bin/singleton \
+sudo wget  https://raw.githubusercontent.com/krezreb/singleton/master/singleton.sh -o /usr/bin/singleton \
 && sudo chmod +x /usr/bin/singleton
 ```
 
