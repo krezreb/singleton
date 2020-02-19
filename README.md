@@ -13,7 +13,7 @@ Installs in /usr/bin
 Or install with this one liner
 
 ```
-sudo wget  https://raw.githubusercontent.com/krezreb/singleton/master/singleton.sh -o /usr/bin/singleton \
+sudo wget  https://raw.githubusercontent.com/krezreb/singleton/master/singleton.sh -O /usr/bin/singleton \
 && sudo chmod +x /usr/bin/singleton
 ```
 
