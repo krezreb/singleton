@@ -8,7 +8,7 @@ lock_aquire() {
     eval "exec $fd>$SINGLETON_LOCK_FILE.lock"
 
     # acquire the lock
-    flock -n $fd \
+    flock -nx $fd \
         && trap lock_release EXIT INT TERM \
         && echo $$>$SINGLETON_LOCK_FILE.pid \
         && return 0 \
@@ -29,15 +29,26 @@ lock_try() {
     export SINGLETON_LOCK_NAME=$1
     export SINGLETON_LOCKFILE_DIR=/tmp
     export SINGLETON_LOCK_FD=200
-
+    export SINGLETON_LOCK_SUCCESS=false
     export SINGLETON_LOCK_FILE=$SINGLETON_LOCKFILE_DIR/$(echo "${SINGLETON_LOCK_NAME}_locked"  | md5sum | cut -d" " -f1)
 
     lock_aquire $SINGLETON_LOCK_NAME \
-        || lock_fail "Another process (pid $(cat $SINGLETON_LOCK_FILE.pid)) has a lock on $SINGLETON_LOCK_NAME, aborting."
+        && export SINGLETON_LOCK_SUCCESS=true \
+        && return 0 \
+    || lock_fail "Another process (pid $(cat $SINGLETON_LOCK_FILE.pid)) has a lock on $SINGLETON_LOCK_NAME, aborting." \
+        && return 1
 }
 
 lock_release() {
-    rm -f $SINGLETON_LOCK_FILE.lock $SINGLETON_LOCK_FILE.pid 
+    #echo 'lock_release()'
+    #echo SINGLETON_LOCK_SUCCESS = $SINGLETON_LOCK_SUCCESS
+    if [ "$SINGLETON_LOCK_SUCCESS" = true ] ; then
+        #echo 'lock_release() rm '
+
+        rm -f $SINGLETON_LOCK_FILE.lock $SINGLETON_LOCK_FILE.pid
+        return 0
+    fi
+    return 1
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]] ; then
