@@ -10,7 +10,7 @@ Once you've cloned this repo
 
 Installs in /usr/bin
 
-Or install without cloning this repo using curl one liner
+Or install with this one liner
 
 ```
 sudo wget  https://raw.githubusercontent.com/krezreb/singleton/master/singleton.sh -o /usr/bin/singleton \
